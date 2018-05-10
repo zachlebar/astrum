@@ -15,6 +15,7 @@ program
     .command('edit', 'edit a component and/or group')
     .command('delete', 'delete component and/or group')
     .command('list', 'list components')
+    .command('figma', 'configure Figma settings')
     .option('-I, --instance', 'output the instance version number')
     .parse(process.argv);
 
