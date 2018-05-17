@@ -638,6 +638,14 @@ new Vue({
                 _this.logError('HTML file for <strong>' + component.name + '</strong> component failed to load from <code>' + component_path + '/html.md</code>');
             });
 
+            // Get and set stylesheet
+            var stylesheet = document.createElement('link');
+            stylesheet.type = 'text/css';
+            stylesheet.rel = 'stylesheet';
+            stylesheet.href = 'components/' + component.group + '/' + component.name + '/style.css';
+
+            document.head.appendChild(stylesheet);
+
             // Get and set component description
             _this.$http.get(component_path + '/description.md' + '?cb=' + new Date()).then(function (response) {
                 component.description = marked(response.data);

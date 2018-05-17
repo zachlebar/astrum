@@ -277,14 +277,22 @@ module.exports = {
                     return;
                 }
 
-                fs.writeFile(_this.pathify(component_path + '/description.md'), '', function(err) {
+                fs.writeFile(_this.pathify(component_path + '/style.css'), '', function(err) {
                     if (err) {
                         console.log(chalk.red('Error: ' + err));
                         error = true;
                         return;
                     }
 
-                    return callback();
+                    fs.writeFile(_this.pathify(component_path + '/description.md'), '', function(err) {
+                        if (err) {
+                            console.log(chalk.red('Error: ' + err));
+                            error = true;
+                            return;
+                        }
+
+                        return callback();
+                    });
                 });
             });
         });
