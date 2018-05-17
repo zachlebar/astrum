@@ -110,26 +110,47 @@ function getFileKey(pageUrl) {
   return pageUrl.replace(/https:\/\/www.figma.com\/file\//, '').replace(/\/.*/,'');
 }
 
+function formatName(name) {
+  let formatted = '';
+  name = name.split('/');
+
+  // if we don't have a name, add them to 'Untitled Group'
+  if (name.length == 1) {
+    name.unshift('Untitled Group');
+  }
+
+  formatted = name[0]+'/';
+  for(var i = 1; i < name.length; i++) {
+    formatted = formatted + name[i] + '-';
+  }
+  formatted = formatted.slice(0, -1);
+
+  return formatted;
+}
+
 /**
  * Fetch the Figma components from the existing URL
  */
 function fetchFigmaComponents() {
   if (utils.$data.figma) {
+
     apiRequest('/files/' + getFileKey(utils.$data.figma.url))
       .then(function (apiResponse) {
-        console.log();
+
         for (nodeID in apiResponse.components) {
-          var component = {};
+          let component = {};
 
           if (nodeID.charAt(0) != '-') {
             component.nodeID = nodeID;
-            component.title = apiResponse.components[nodeID].name;
-            buildComponent(component);
+            component.title = formatName(apiResponse.components[nodeID].name);
+            // buildComponent(component);
+            console.log(component);
           }
         }
-        console.log();
+
       }
     );
+
   } else {
     console.log(chalk.red('No Figma settings found!'));
     editFigmaSettings();
@@ -147,8 +168,8 @@ function buildComponent(component) {
     var newComponent = {};
 
     // fill in our component details with some reasonable defaults
-    newComponent.group = parts[0].toLowerCase();
-    newComponent.name = parts[1].toLowerCase();
+    newComponent.group = parts[0].toLowerCase().replace(/\s/, '_');
+    newComponent.name = parts[1].toLowerCase().replace(/\s/, '_');
     newComponent.title = parts[1];
     newComponent.width = 'half';
     newComponent.nodeID = component.nodeID;
@@ -161,13 +182,20 @@ function buildComponent(component) {
       newGroup.title = parts[0];
 
       let group_position = utils.$data.groups.length - 1;
+      if (group_position == -1) {
+        group_position = 0;
+      }
 
       // create the new Group and new Component
       utils.$data.groups.splice(group_position, 0, newGroup);
       utils.$data.groups[group_position].components = [newComponent];
 
+      var group_path = utils.$config.path + '/components/' + newComponent.group,
+          component_path = group_path + '/' + newComponent.name;
+
       // create the corresponding files
-      if (utils.createComponentFiles(newComponent)) {
+      utils.createGroupFolder(group_path, function() {
+        utils.createComponentFolder(component_path, function() {
           utils.saveData(function () {
               console.log();
               console.log(chalk.grey('----------------------------------------------------------------'));
@@ -180,7 +208,8 @@ function buildComponent(component) {
               console.log(chalk.yellow('Add your component description to ' + utils.$config.path + '/components/' + newComponent.group + '/' + newComponent.name + '/description.md (Markdown supported)'));
               console.log();
           });
-      }
+        });
+      });
     // if this is an existing group
     } else {
       var groupIndex = utils.getGroupIndex(newComponent.group);
@@ -189,20 +218,23 @@ function buildComponent(component) {
       // create the new Component
       utils.$data.groups[groupIndex].components.splice(component_position, 0, newComponent);
 
-      // create the corresponding files
-      if (utils.createComponentFiles(newComponent)) {
-          utils.saveData(function () {
-              console.log();
-              console.log(chalk.grey('----------------------------------------------------------------'));
-              console.log(chalk.green('\u2713 Pattern library data saved successfully.'));
-              console.log(chalk.grey('----------------------------------------------------------------'));
+      var group_path = utils.$config.path + '/components/' + newComponent.group,
+          component_path = group_path + '/' + newComponent.name;
 
-              console.log();
-              console.log(chalk.yellow('Add your component markup to ' + utils.$config.path + '/components/' + newComponent.group + '/' + newComponent.name + '/markup.html'));
-              console.log(chalk.yellow('Add your component description to ' + utils.$config.path + '/components/' + newComponent.group + '/' + newComponent.name + '/description.md (Markdown supported)'));
-              console.log();
-          });
-      }
+      // create the corresponding files
+      utils.createComponentFolder(component_path, function() {
+        utils.saveData(function () {
+            console.log();
+            console.log(chalk.grey('----------------------------------------------------------------'));
+            console.log(chalk.green('\u2713 Pattern library data saved successfully.'));
+            console.log(chalk.grey('----------------------------------------------------------------'));
+
+            console.log();
+            console.log(chalk.yellow('Add your component markup to ' + utils.$config.path + '/components/' + newComponent.group + '/' + newComponent.name + '/markup.html'));
+            console.log(chalk.yellow('Add your component description to ' + utils.$config.path + '/components/' + newComponent.group + '/' + newComponent.name + '/description.md (Markdown supported)'));
+            console.log();
+        });
+      });
     }
   }
 }
