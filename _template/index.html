@@ -261,16 +261,21 @@
                                                 {{{ component.html }}}
                                             </div>
 
-                                            <template v-if="component.html">
-                                                <div class="ndpl-component__code ndpl-c-border"
-                                                     v-show="component.code_show">
-                                                    <pre class="ndpl-pre"><code class="ndpl-code html" v-text="component.html"></code></pre>
-                                                </div>
-                                                <a v-if="!component.options.disable_code_sample"
-                                                   class="ndpl-component__code-toggle ndpl-c-highlight ndpl-c-border"
-                                                   @click.prevent="component.code_show = ! component.code_show"
-                                                   v-text="component.code_show ? 'Hide code sample' : 'Show code sample'"></a>
-                                            </template>
+                                            <div class="ndpl-component__code ndpl-c-border"
+                                                 v-show="component.code_show">
+                                              <template v-if="component.html">
+                                                      <span class="ndpl-component__code-label">HTML</span>
+                                                      <pre class="ndpl-pre"><code class="ndpl-code html" v-text="component.html"></code></pre>
+                                              </template>
+                                              <template v-if="component.css">
+                                                      <span class="ndpl-component__code-label">CSS</span>
+                                                      <pre class="ndpl-pre"><code class="ndpl-code css">{{ component.css }}</code></pre>
+                                              </template>
+                                            </div>
+                                            <a v-if="!component.options.disable_code_sample"
+                                               class="ndpl-component__code-toggle ndpl-c-highlight ndpl-c-border"
+                                               @click.prevent="component.code_show = ! component.code_show"
+                                               v-text="component.code_show ? 'Hide code sample' : 'Show code sample'"></a>
                                             <ul v-else class="ndpl-component__sample-missing ndpl-info">
                                                 <li class="ndpl-info__item">Add your component markup to <code>/components/{{ component.group }}/{{ component.name }}/markup.html</code></li>
                                             </ul>

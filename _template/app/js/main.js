@@ -594,8 +594,9 @@ new Vue({
                     _this.$set('groups[' + i + '].components[' + j + '].type', group.components[j].type ? group.components[j].type : 'standard');
                     _this.$set('groups[' + i + '].components[' + j + '].width', group.components[j].width ? group.components[j].width : 'full');
 
-                    // Add html and description properties to the component object.
+                    // Add html, css, and description properties to the component object.
                     _this.$set('groups[' + i + '].components[' + j + '].html', '');
+                    _this.$set('groups[' + i + '].components[' + j + '].css', '');
                     _this.$set('groups[' + i + '].components[' + j + '].description', '');
 
                     _this.loadComponent(_this.groups[i].components[j]);
@@ -643,6 +644,12 @@ new Vue({
             stylesheet.type = 'text/css';
             stylesheet.rel = 'stylesheet';
             stylesheet.href = 'components/' + component.group + '/' + component.name + '/style.css';
+
+            _this.$http.get(component_path + '/style.css' + '?cb=' + new Date()).then(function (response) {
+                component.css = response.data;
+            }, function () {
+                _this.logError('CSS file for <strong>' + component.name + '</strong> component failed to load from <code>' + component_path + '/style.css</code>');
+            });
 
             document.head.appendChild(stylesheet);
 

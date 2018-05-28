@@ -33,7 +33,8 @@
 .ndpl-component__color,
 .ndpl-page,
 .ndpl-nav__title,
-.ndpl-sidebar__title {
+.ndpl-sidebar__title,
+.ndpl-component__code-label {
     font-family: 'Open Sans', 'Trebuchet MS', 'Lucida Grande', 'Lucida Sans Unicode', 'Lucida Sans', Tahoma, sans-serif;
 }
 
@@ -1023,6 +1024,7 @@
     text-align: center;
 }
 .ndpl-component__code {
+    background-color: #F9FAFC;
     border-bottom: 1px solid #E0E6ED;
 }
 .ndpl-component__code .ndpl-pre {
@@ -1060,6 +1062,18 @@
     padding: 9px 12px 9px 12px;
     text-align: center;
     text-transform: uppercase;
+}
+
+.ndpl-component__code-label {
+  border-bottom: 1px solid #E0E6ED;
+  color: #303637;
+  display: block;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  margin: 0 24px 21px 24px;
+  padding: 21px 0 0 0;
+  text-transform: uppercase;
 }
 
 @media only screen and (min-width: 60em) {
