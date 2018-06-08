@@ -257,7 +257,7 @@ module.exports = {
         return ! error;
     },
 
-    createComponentFolder: function(component_path, callback) {
+    createComponentFolder: function(component_path, group_path, callback) {
         callback = typeof callback !== 'undefined' ? callback : function(){};
 
         var _this = this,
@@ -265,9 +265,19 @@ module.exports = {
 
         fs.mkdir(_this.pathify(component_path), function(err) {
             if (err) {
-                console.log(chalk.red('Error: ' + err));
+                console.log(chalk.red('Error HERE: ' + err));
                 error = true;
-                return;
+                // return;
+
+                fs.mkdir(group_path, function(err) {
+                    if (err) {
+                        console.log(chalk.red('Error OR HERE: ' + err));
+                        error = true;
+                        return;
+                    }
+
+                    _this.createGroupDescription(group_path);
+                });
             }
 
             fs.writeFile(_this.pathify(component_path + '/markup.html'), '', function(err) {

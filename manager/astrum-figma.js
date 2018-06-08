@@ -92,7 +92,7 @@ function editFigmaSettings() {
 function apiRequest(endpoint) {
   return fetch('https://api.figma.com/v1' + endpoint, {
       method: 'GET',
-      headers: { "x-figma-token": utils.$data.figma.token }
+      headers: { "X-Figma-Token": utils.$data.figma.token }
   }).then(function(response) {
       return response.json();
   }).catch(function (error) {
@@ -131,25 +131,31 @@ function formatName(name) {
 /**
  * Fetch the Figma components from the existing URL
  */
-function fetchFigmaComponents() {
+async function fetchFigmaComponents() {
   if (utils.$data.figma) {
+    var componentArray = [];
 
-    apiRequest('/files/' + getFileKey(utils.$data.figma.url))
+    await apiRequest('/files/' + getFileKey(utils.$data.figma.url))
       .then(function (apiResponse) {
-
+        // console.log(apiResponse);
         for (nodeID in apiResponse.components) {
           let component = {};
 
           if (nodeID.charAt(0) != '-') {
             component.nodeID = nodeID;
             component.title = formatName(apiResponse.components[nodeID].name);
-            // buildComponent(component);
-            console.log(component);
+            componentArray.push(component);
           }
         }
-
       }
     );
+
+    await console.log(componentArray);
+
+    await componentArray.forEach(function(component) {
+      buildComponent(component);
+      // console.log("Built " + component.title);
+    });
 
   } else {
     console.log(chalk.red('No Figma settings found!'));
@@ -195,7 +201,7 @@ function buildComponent(component) {
 
       // create the corresponding files
       utils.createGroupFolder(group_path, function() {
-        utils.createComponentFolder(component_path, function() {
+        utils.createComponentFolder(component_path, group_path, function() {
           utils.saveData(function () {
               console.log();
               console.log(chalk.grey('----------------------------------------------------------------'));
@@ -222,7 +228,7 @@ function buildComponent(component) {
           component_path = group_path + '/' + newComponent.name;
 
       // create the corresponding files
-      utils.createComponentFolder(component_path, function() {
+      utils.createComponentFolder(component_path, group_path, function() {
         utils.saveData(function () {
             console.log();
             console.log(chalk.grey('----------------------------------------------------------------'));
