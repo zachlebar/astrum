@@ -150,8 +150,6 @@ async function fetchFigmaComponents() {
       }
     );
 
-    await console.log(componentArray);
-
     await componentArray.forEach(function(component) {
       buildComponent(component);
       // console.log("Built " + component.title);
