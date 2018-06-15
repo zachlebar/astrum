@@ -1076,6 +1076,27 @@
   text-transform: uppercase;
 }
 
+.ndpl-component__ref-image {
+  border: 1px dashed #E0E6ED;
+  border-radius: 6px;
+  margin: 0 0 1em 0;
+}
+
+.ndpl-component__ref-image img {
+  padding: 2em;
+}
+
+.ndpl-component__ref-image p {
+  background-color: #f9fafc;
+  border-bottom: 1px dashed #E0E6ED;
+  color: #616367;
+  font-family: 'Open Sans', 'Trebuchet MS', 'Lucida Grande', 'Lucida Sans Unicode', 'Lucida Sans', Tahoma, sans-serif;
+  font-size: 12px;
+  margin: 0;
+  padding: 1em;
+  text-transform: uppercase;
+}
+
 @media only screen and (min-width: 60em) {
 
     .ndpl-component__sample {

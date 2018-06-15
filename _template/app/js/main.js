@@ -186,13 +186,15 @@ var ndplComponent = Vue.extend({
             setTimeout(function() {
                 if(_this.$el.querySelector('.ndpl-component__code')) {
 
-                    /**
-                     * Auto-detect hidden sample.
-                     */
+                  /**
+                   * Auto-detect hidden sample.
+                   */
+                  if (_this.$el.querySelector('.ndpl-component__sample')) {
                     if (_this.$el.querySelector('.ndpl-component__sample').offsetHeight <= 74 &&
                         !_this.component.options.disabled_auto_sample_hiding) {
                         _this.hide_sample_code = true;
                     }
+                  }
 
                     /**
                      * If manually specifying when to show nad hide samples.

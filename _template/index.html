@@ -226,6 +226,8 @@
                                     <div class="ndpl-component__description ndpl-c-brand-ca"
                                          v-html="component.description"></div>
 
+                                    <img v-if="component.refImg" src="{{ component.refImg }}" />
+
                                     <template v-if="component.type == 'colors'">
                                         <div v-if="component.colors.length" class="ndpl-component__colors ndpl-cf">
 
@@ -272,7 +274,7 @@
                                                       <pre class="ndpl-pre"><code class="ndpl-code css">{{ component.css }}</code></pre>
                                               </template>
                                             </div>
-                                            <a v-if="!component.options.disable_code_sample"
+                                            <a v-if="component.html != ''"
                                                class="ndpl-component__code-toggle ndpl-c-highlight ndpl-c-border"
                                                @click.prevent="component.code_show = ! component.code_show"
                                                v-text="component.code_show ? 'Hide code sample' : 'Show code sample'"></a>

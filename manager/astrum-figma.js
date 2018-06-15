@@ -164,12 +164,18 @@ async function fetchFigmaComponents() {
 /**
  * Build the Astrum components from the Figma info
  */
-function buildComponent(component) {
+async function buildComponent(component) {
 
   // make sure we have a valid potential component
   if (utils.validateComponent(component.title)) {
     var parts = component.title.split("/");
     var newComponent = {};
+
+    await apiRequest('/images/' + getFileKey(utils.$data.figma.url) + '?format=svg&ids=' + component.nodeID)
+      .then(function (response) {
+        newComponent.refImg = response.images[component.nodeID];
+      }
+    );
 
     // fill in our component details with some reasonable defaults
     newComponent.group = parts[0].toLowerCase().replace(/\s/, '_');
@@ -198,7 +204,7 @@ function buildComponent(component) {
           component_path = group_path + '/' + newComponent.name;
 
       // create the corresponding files
-      utils.createGroupFolder(group_path, function() {
+      await utils.createGroupFolder(group_path, function() {
         utils.createComponentFolder(component_path, group_path, function() {
           utils.saveData(function () {
               console.log();
@@ -226,7 +232,7 @@ function buildComponent(component) {
           component_path = group_path + '/' + newComponent.name;
 
       // create the corresponding files
-      utils.createComponentFolder(component_path, group_path, function() {
+      await utils.createComponentFolder(component_path, group_path, function() {
         utils.saveData(function () {
             console.log();
             console.log(chalk.grey('----------------------------------------------------------------'));
