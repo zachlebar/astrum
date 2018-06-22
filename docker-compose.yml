@@ -1,0 +1,9 @@
+version: '3'
+
+services:
+  fastrum:
+    build: .
+    ports:
+      - "7010:80"
+    volumes:
+      - ./code:/usr/share/nginx/html:rw
